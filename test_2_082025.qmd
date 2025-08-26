@@ -1,0 +1,394 @@
+---
+title: "   test_2_082025"
+author: "Bobae Kang and Yizi (Winnie) Huang<br>Center for Criminal Justice Data and Analytics"
+
+format: 
+  revealjs:
+    #theme: solarized
+    slide-number: true
+    preview-links: auto
+    logo: images/quarto.png
+    self-contained: false   # must be false if external JS/CSS
+    css: draw.css
+    include-after-body: draw.js
+    #css: styles.css
+    footer: '[https://{{< meta prerelease-subdomain >}}quarto.org](https://{{< meta prerelease-subdomain >}}quarto.org)'
+editor: visual
+---
+
+# Want to modify?
+
+# See: https://docs.google.com/document/d/19tHhGsLKwVJvA-GPFHCwWAcj67hzui4yp2A4lv3Ob7c/edit?tab=t.0
+
+#Did you accidentally delete? That's okay, find another copy here (small teal hard drive): \# /Volumes/Extreme SSD/2025/NEOMED/course_website_files
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+
+## Bullets
+
+When you click the **Render** button a document will be generated that includes:
+
+-   Content authored with markdown
+-   Output from executable code
+
+## Code
+
+When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+#| echo: true  # show code
+#| eval: true   # run code
+#| warning: false
+#| message: false
+1 + 1
+```
+
+
+
+## Python {.smaller}
+
+```{python}
+#%pip install jupyter
+#%pip install matplotlib
+#%pip install numpy
+
+#| code-line-numbers: "|6|9"
+#| echo: true
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+ax.plot(theta, r)
+ax.set_rticks([0.5, 1, 1.5, 2])
+ax.grid(True)
+plt.show()
+```
+
+
+
+
+::: footer
+Learn more: [Quarto Presentations](https://{{< meta prerelease-subdomain >}}quarto.org/docs/presentations/revealjs/)
+:::
+
+## Line Highlighting {background="#0A6D96"}
+
+-   Highlight specific lines for emphasis
+-   Incrementally highlight additional lines
+
+```{python}
+#| echo: true            # show code
+#| eval: true            # run code
+#| code-line-numbers: "4-5|7|10"   # highlight lines in the slide
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+ax.plot(theta, r)
+ax.set_rticks([0.5, 1, 1.5, 2])
+ax.grid(True)
+plt.show()
+```
+
+```{=html}
+<!-- Drawing canvas overlay -->
+<canvas id="draw-layer"></canvas>
+
+<style>
+  /* Make canvas cover the whole slide and enable touch drawing */
+  #draw-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none; /* required for iPad touch drawing */
+    z-index: 1000; /* ensure it overlays the slide content */
+  }
+  /* Remove the border and background of code blocks */
+.reveal .highlight pre {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+</style>
+
+<script>
+  const canvas = document.getElementById('draw-layer');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  ctx.lineWidth = 2;        // thickness of drawing
+  ctx.strokeStyle = 'yellow'; // color of drawing
+
+  let drawing = false;
+
+  canvas.addEventListener('pointerdown', e => { 
+    drawing = true; 
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY); 
+  });
+
+  canvas.addEventListener('pointermove', e => { 
+    if(drawing) {
+      ctx.lineTo(e.offsetX, e.offsetY); 
+      ctx.stroke();
+    }
+  });
+  
+  
+
+  canvas.addEventListener('pointerup', () => drawing = false);
+  canvas.addEventListener('pointerleave', () => drawing = false);
+</script>
+```
+
+::: footer
+Learn more: [Line Highlighting](https://{{< meta prerelease-subdomain >}}quarto.org/docs/presentations/revealjs/#line-highlighting)
+:::
+
+## Live Drawing {.smaller .scrollable transition="slide"}
+
+::: panel-tabset
+### Canvas
+
+```{=html}
+<!-- Drawing styles -->
+<style>
+#draw-layer {
+  width: 100%;
+  height: 500px;
+  border: 2px solid #ccc;
+  cursor: crosshair;
+}
+</style>
+
+<!-- Drawing canvas -->
+<canvas id="draw-layer"></canvas>
+
+<!-- Drawing script -->
+<script>
+const canvas = document.getElementById('draw-layer');
+const ctx = canvas.getContext('2d');
+
+// resize canvas to match element size
+canvas.width = canvas.offsetWidth;
+canvas.height = canvas.offsetHeight;
+
+let drawing = false;
+
+function startDraw(e) {
+  drawing = true;
+  draw(e);
+}
+function endDraw() {
+  drawing = false;
+  ctx.beginPath();
+}
+function draw(e) {
+  if (!drawing) return;
+
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "black";
+
+  let rect = canvas.getBoundingClientRect();
+  let x = (e.clientX || e.touches[0].clientX) - rect.left;
+  let y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+}
+
+// Mouse events
+canvas.addEventListener("mousedown", startDraw);
+canvas.addEventListener("mouseup", endDraw);
+canvas.addEventListener("mousemove", draw);
+
+// Touch events (for iPad)
+canvas.addEventListener("touchstart", startDraw);
+canvas.addEventListener("touchend", endDraw);
+canvas.addEventListener("touchmove", draw);
+</script>
+```
+
+:::
+
+::: footer
+Drawing powered by custom JS/CSS (draw.js + draw.css)
+:::
+
+
+
+## Tabsets {.smaller .scrollable transition="slide"}
+
+::: panel-tabset
+### Plot
+
+```{r}
+library(ggplot2)
+ggplot(mtcars, aes(hp, mpg, color = am)) +
+  geom_point() +
+  geom_smooth(formula = y ~ x, method = "loess")
+```
+
+### Data
+
+```{r}
+# You can use this function to convert an imported table in the same format
+knitr::kable(mtcars) 
+```
+:::
+
+::: footer
+Learn more: [Tabsets](https://{{< meta prerelease-subdomain >}}quarto.org/docs/presentations/revealjs/#tabsets)
+:::
+
+## Line Highlighting (Side-by-Side)
+
+::::: columns
+::: column
+###  
+
+###  
+
+```{python}
+#| echo: true
+#| eval: false   # only show the code, don’t run here
+#| code-line-numbers: "4-5|7|10"
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+ax.plot(theta, r)
+ax.set_rticks([0.5, 1, 1.5, 2])
+ax.grid(True)
+plt.show()
+```
+:::
+
+::: column
+```{python}
+#| echo: false
+#| fig-width: 50
+#| fig-height: 50
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+ax.plot(theta, r)
+ax.set_rticks([0.5, 1, 1.5, 2])
+ax.grid(True)
+plt.show()
+```
+:::
+:::::
+
+## LaTeX Equations
+
+[MathJax](https://www.mathjax.org/) rendering of equations to HTML
+
+::::: columns
+::: {.column width="40%"}
+``` tex
+\begin{gather*}
+a_1=b_1+c_1\\
+a_2=b_2+c_2-d_2+e_2
+\end{gather*}
+
+\begin{align}
+a_{11}& =b_{11}&
+  a_{12}& =b_{12}\\
+a_{21}& =b_{21}&
+  a_{22}& =b_{22}+c_{22}
+\end{align}
+```
+:::
+
+::: {.column width="60%"}
+\begin{gather*}
+a_1=b_1+c_1\\
+a_2=b_2+c_2-d_2+e_2
+\end{gather*} \begin{align}
+a_{11}& =b_{11}&
+  a_{12}& =b_{12}\\
+a_{21}& =b_{21}&
+  a_{22}& =b_{22}+c_{22}
+\end{align}
+:::
+:::::
+
+::: footer
+Learn more: [LaTeX Equations](https://{{< meta prerelease-subdomain >}}quarto.org/docs/authoring/markdown-basics.html#equations)
+:::
+
+## Incremental Lists
+
+Lists can optionally be displayed incrementally:
+
+::: incremental
+-   First item
+-   Second item
+-   Third item
+:::
+
+. . .
+
+<br/> Insert pauses to make other types of content display incrementally.
+
+::: footer
+Learn more: [Incremental Lists](https://{{< meta prerelease-subdomain >}}quarto.org/docs/presentations/revealjs/#incremental-lists)
+:::
+
+## Fragments
+
+Incremental text display and animation with fragments:
+
+<br/>
+
+::: {.fragment .fade-in}
+Fade in
+:::
+
+::: {.fragment .fade-up}
+Slide up while fading in
+:::
+
+::: {.fragment .fade-left}
+Slide left while fading in
+:::
+
+::: {.fragment .fade-in-then-semi-out}
+Fade in then semi out
+:::
+
+. . .
+
+::: {.fragment .strike}
+Strike
+:::
+
+::: {.fragment .highlight-red}
+Highlight red
+:::
+
+::: footer
+Learn more: [Fragments](https://{{< meta prerelease-subdomain >}}quarto.org/docs/presentations/revealjs/advanced.html#fragments)
+:::
